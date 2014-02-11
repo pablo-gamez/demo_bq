@@ -23,4 +23,15 @@
         android:onClick="goDropBox"
         android:text="@string/acceder" />
 
+    <Button
+        android:id="@+id/goListBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mainImg"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:visibility="gone"
+        android:onClick="goList"
+        android:text="@string/showList" />
+
 </RelativeLayout>

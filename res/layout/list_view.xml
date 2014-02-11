@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <TextView
+        android:id="@+id/listHeader"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/light_gray"
+        android:gravity="center"
+        android:text="@string/bookList"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <ListView
+        android:id="@+id/listContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/listHeader" />
+
+    <TextView
+        android:id="@+id/emptyContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/listHeader"
+        android:gravity="center"
+        android:textSize="18sp"
+        android:padding="20dp"
+        android:text="@string/emptyList" />
+
+</RelativeLayout>

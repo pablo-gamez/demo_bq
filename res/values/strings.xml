@@ -3,5 +3,8 @@
 
     <string name="app_name">DropBook</string>
     <string name="acceder">Accede a DropBox</string>
+    <string name="showList">Ver lista de libros</string>
+    <string name="bookList">Lista de libros en Dropbox</string>
+    <string name="emptyList">No hay libros electrónicos en tu cuenta de Dropbox</string>
     
 </resources>
