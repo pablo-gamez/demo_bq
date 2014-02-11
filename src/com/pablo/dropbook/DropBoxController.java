@@ -184,6 +184,29 @@ public class DropBoxController implements AppData {
 		return false;
 	}
 
+	// access methods
+
+	public void listFiles() {
+		try {
+			Entry existingEntry = mApi.metadata("/", 0, null,
+					false, null);
+			Log.i("DbExampleLog", "The file's rev is now: " + existingEntry.rev);
+		} catch (DropboxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public Entry getEntry(String path, int fileLimit, boolean showChilds) {
+		try {
+			return mApi.metadata(path, fileLimit, null, showChilds, null);
+			
+		} catch (DropboxException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	// ========basic functions===================================
 
 	public void uploadFile(File file, String path) {

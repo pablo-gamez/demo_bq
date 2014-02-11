@@ -44,6 +44,7 @@ public class MainActivity extends Activity implements AppData {
 	}
 
 	public void goList(View view) {
+		new BookDownloader(MainActivity.this).execute();
 		Intent intent = new Intent(getBaseContext(), ListActivity.class);
 		startActivity(intent);
 	}

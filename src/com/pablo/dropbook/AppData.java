@@ -12,6 +12,13 @@ public interface AppData {
 	// Preferences
 	public static final String PREFS_NAME = "com.pablo.dropbook.prefs";
 	public static final String USR_TOKEN = "userToken";
-
+	
+	// Data between activities
+	public static final String DB_DATA = "dropBoxData";
+	
+	// Constants
+	public static final String _EPUB = ".epub";
+	public static final String TAG_ERROR = "ERROR";
+	public static final String DROP_PATH = "/";
 
 }
