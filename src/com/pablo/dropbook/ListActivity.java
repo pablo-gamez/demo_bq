@@ -10,7 +10,7 @@ import android.widget.TextView;
 public class ListActivity extends Activity implements AppData {
 
 	ListView list;
-	ArrayList<Ebook> thumbs;
+	ArrayList<Ebook> eBooks;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -22,7 +22,7 @@ public class ListActivity extends Activity implements AppData {
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			if (extras.get(DB_DATA) instanceof ArrayList) {
-				thumbs = (ArrayList<Ebook>) extras.get(DB_DATA);
+				eBooks = (ArrayList<Ebook>) extras.get(DB_DATA);
 			}
 		}
 

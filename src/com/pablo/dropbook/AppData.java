@@ -7,7 +7,7 @@ public interface AppData {
 	// DropBox keys
 	public static final String APP_KEY = "z57o02qodwuu7y0";
 	public static final String APP_SECRET = "6ircrg8fq9vcdzz";
-	public static final AccessType ACCESS_TYPE = AccessType.APP_FOLDER;
+	public static final AccessType ACCESS_TYPE = AccessType.DROPBOX;
 	
 	// Preferences
 	public static final String PREFS_NAME = "com.pablo.dropbook.prefs";
@@ -19,6 +19,6 @@ public interface AppData {
 	// Constants
 	public static final String _EPUB = ".epub";
 	public static final String TAG_ERROR = "ERROR";
-	public static final String DROP_PATH = "/";
+	public static final String DROPBOX_BASE_PATH = "/";
 
 }

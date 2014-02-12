@@ -19,8 +19,6 @@ public class BookDownloader extends AsyncTask<Void, Long, Boolean> implements
 
 	ArrayList<Ebook> eBooks = new ArrayList<Ebook>();
 
-	private String mErrorMsg;
-
 	public BookDownloader(Activity context) {
 		mActivity = context;
 		dbHandler = DropBoxController.getInstance(context
@@ -31,21 +29,12 @@ public class BookDownloader extends AsyncTask<Void, Long, Boolean> implements
 	@Override
 	protected Boolean doInBackground(Void... params) {
 
-		Entry dirEnt = dbHandler.getEntry(DROP_PATH, 1000, true);
+		eBooks = getBooks(DROPBOX_BASE_PATH);
 
-		if (!dirEnt.isDir || dirEnt.contents == null) {
-			// It's not a directory, or there's nothing in it
-			return false;
-		} else {
-			for (Entry entry : dirEnt.contents) {
-				if (entry.fileName().endsWith(_EPUB)) {
-					eBooks.add(new Ebook(entry));
-				}
-				System.out.println("Entries from dropbox: "
-						+ mActivity.getCacheDir().getAbsolutePath()
-						+ entry.path);
-			}
+		if (eBooks != null && eBooks.size() > 0) {
 			return true;
+		} else {
+			return false;
 		}
 
 	}
@@ -60,9 +49,34 @@ public class BookDownloader extends AsyncTask<Void, Long, Boolean> implements
 
 		} else {
 			// Couldn't download it, so show an error
-			Toast.makeText(mActivity, mErrorMsg, Toast.LENGTH_LONG).show();
-			Log.e(TAG_ERROR, "File or empty directory" );
+			Toast.makeText(
+					mActivity,
+					"No hay eBooks con formato \".epub\" en tu cuenta de dropbox",
+					Toast.LENGTH_LONG).show();
+			Log.e(TAG_ERROR, "No eBooks detected");
 		}
+	}
+
+	// Recursive method to retrieve all .epub files from dropbox account
+	private ArrayList<Ebook> getBooks(String path) {
+		ArrayList<Ebook> books = new ArrayList<Ebook>();
+
+		Entry parentEntry = dbHandler.getEntry(path, 1000, true);
+
+		if (parentEntry.contents != null) {
+			for (Entry entry : parentEntry.contents) {
+				if (entry.isDir) {
+					books.addAll(getBooks(entry.path));
+				} else {
+					if (entry.fileName().endsWith(_EPUB)) {
+						Log.d("NEW_EPUB", entry.fileName());
+						books.add(new Ebook(entry));
+					}
+				}
+			}
+		}
+
+		return books;
 	}
 
 }
