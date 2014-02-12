@@ -1,36 +1,13 @@
-/*
- * Copyright (c) 2010-11 Dropbox, Inc.
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
- * conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- */
-
 package com.pablo.dropbook;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.Date;
+import java.io.IOException;
 
+import nl.siegmann.epublib.domain.Book;
+import nl.siegmann.epublib.epub.EpubReader;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -44,8 +21,6 @@ import com.dropbox.client2.DropboxAPI.Entry;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.android.AuthActivity;
 import com.dropbox.client2.exception.DropboxException;
-import com.dropbox.client2.exception.DropboxServerException;
-import com.dropbox.client2.exception.DropboxUnlinkedException;
 import com.dropbox.client2.session.AppKeyPair;
 
 public class DropBoxController implements AppData {
@@ -56,9 +31,7 @@ public class DropBoxController implements AppData {
 	private SharedPreferences prefs;
 	private SharedPreferences.Editor prefsEdit;
 
-	// You don't need to change these, leave them alone.
-	final static private String REV_PREFIX = "REV";
-	final static private String REV_MODIFIED = "MODIFIED";
+	private String basePath;
 
 	private static DropBoxController mInstance;
 
@@ -86,6 +59,8 @@ public class DropBoxController implements AppData {
 		mApi = new DropboxAPI<AndroidAuthSession>(session);
 
 		checkAppKeySetup();
+
+		basePath = "data/data/" + mContext.getPackageName() + "/";
 	}
 
 	@SuppressWarnings("deprecation")
@@ -184,7 +159,7 @@ public class DropBoxController implements AppData {
 		return false;
 	}
 
-	// access methods
+	// Methods
 
 	public Entry getEntry(String path, int fileLimit, boolean showChilds) {
 		try {
@@ -196,134 +171,29 @@ public class DropBoxController implements AppData {
 		}
 	}
 
-	// ========basic functions===================================
-
-	public void uploadFile(File file, String path) {
+	public Book downloadBook(String dropboxPath, String fileName) {
 		try {
-			FileInputStream fis = new FileInputStream(file);
-			Entry newEntry = mApi.putFileOverwrite(path, fis, file.length(),
-					null);
-			Log.i(TAG, "The uploaded file's rev is: " + newEntry.rev);
-			saveFileRev(path, newEntry.rev);
-			saveFileModifiedDate(path, file.lastModified() + "");
-		} catch (DropboxUnlinkedException e) {
-			// User has unlinked, ask them to link again here.
-			Log.e(TAG, "User has unlinked.");
-		} catch (DropboxException e) {
-			Log.e(TAG, "Something went wrong while uploading.");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void downloadFile(File file, String path) {
-		try {
+			// File to download DropBox data
+			File file = new File(basePath, fileName);
 			FileOutputStream fos = new FileOutputStream(file);
-			mApi.getFile(path, null, fos, null);
-			Entry entry = mApi.metadata(path, 0, null, false, null);
-			saveFileModifiedDate(path, file.lastModified() + "");
-			saveFileRev(path, entry.rev);
-		} catch (DropboxException e) {
-			Log.e(TAG, "Something went wrong while downloading.");
+			mApi.getFile(dropboxPath, null, fos, null);
+			fos.close();
+
+			// Convert file into Ebook
+			EpubReader reader = new EpubReader();
+			FileInputStream fis = new FileInputStream(file);
+			Book book = reader.readEpub(fis);
+
+			return book;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		}
-	}
-
-	private String getCurrentFileRev(String path) {
-		return prefs.getString(REV_PREFIX + path, "");
-	}
-
-	private void saveFileRev(String path, String rev) {
-		prefsEdit.putString(REV_PREFIX + path, rev);
-		prefsEdit.commit();
-	}
-
-	@SuppressWarnings("deprecation")
-	private Date getCurrentFileModifiedDate(String path) {
-		String dateString = prefs.getString(REV_MODIFIED + path, "0");
-		long dateMilli = Long.parseLong(dateString);
-		Date date = new Date(1900, 1, 1);
-		try {
-			date = new Date(dateMilli);
-		} catch (Exception e) {
+		} catch (DropboxException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return date;
+
+		return null;
 	}
-
-	private void saveFileModifiedDate(String path, String date) {
-		prefsEdit.putString(REV_MODIFIED + path, date);
-		prefsEdit.commit();
-	}
-
-	public boolean synchronizeFile(File file, String pathOnline) {
-		boolean isFileUpdated = false;
-		String lastRev = getCurrentFileRev(pathOnline);
-		Date lastModifiedRecord = getCurrentFileModifiedDate(pathOnline);
-		Date lastModified = new Date(file.lastModified());
-		if (lastModifiedRecord.before(lastModified)) {
-			// file has change since last download
-			// need to upload or download
-			try {
-				Entry existingEntry = mApi.metadata(FILE_FAVIROTE, 1, null,
-						false, null);
-				String rev = existingEntry.rev;
-
-				if (rev.equals(lastRev)) {
-					// remote file hasn't change since last synchronization
-					// upload file
-					uploadFile(file, pathOnline);
-				} else {
-					// remote file has changed since last synchronization
-					// conflict
-					// TODO: merge file?
-					downloadFile(file, pathOnline);
-					isFileUpdated = true;
-				}
-
-			} catch (DropboxServerException e) {
-				switch (e.error) {
-				case DropboxServerException._404_NOT_FOUND:
-					// remote file not exist
-					// upload
-					uploadFile(file, pathOnline);
-				default:
-					break;
-
-				}
-			} catch (DropboxException e) {
-				Log.e(TAG, "Something went wrong while getting metadata.");
-				// not available online
-			}
-		} else {
-			// file hasn't change since last download
-			// need to check if there's a new version
-			try {
-				Entry existingEntry = mApi.metadata(FILE_FAVIROTE, 1, null,
-						false, null);
-				String rev = existingEntry.rev;
-
-				if (!rev.equals(lastRev)) {
-					// not synchronized
-					// need to download
-					if (file.exists()) {
-						file.delete();
-					}
-					downloadFile(file, pathOnline);
-					isFileUpdated = true;
-				}
-
-			} catch (DropboxException e) {
-				Log.e(TAG, "Something went wrong while getting metadata.");
-				// consider as no new version available
-			}
-		}
-		return isFileUpdated;
-	}
-
-	// =========my functions==========
-
-	private static final String FILE_FAVIROTE = "/favorite.xml";
 
 }

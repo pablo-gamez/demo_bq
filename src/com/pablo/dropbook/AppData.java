@@ -14,7 +14,7 @@ public interface AppData {
 	public static final String USR_TOKEN = "userToken";
 	
 	// Data between activities
-	public static final String DB_DATA = "dropBoxData";
+	public static final String DB_DATA = "com.pablo.dropbook.dropBoxData";
 	
 	// Constants
 	public static final String _EPUB = ".epub";

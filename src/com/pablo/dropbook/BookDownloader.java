@@ -2,6 +2,7 @@ package com.pablo.dropbook;
 
 import java.util.ArrayList;
 
+import nl.siegmann.epublib.domain.Book;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -43,9 +44,8 @@ public class BookDownloader extends AsyncTask<Void, Long, Boolean> implements
 	protected void onPostExecute(Boolean result) {
 		if (result) {
 			Intent intent = new Intent(this.mActivity, ListActivity.class);
-			intent.putExtra(DB_DATA, eBooks);
+			intent.putParcelableArrayListExtra(DB_DATA, eBooks);
 			mActivity.startActivity(intent);
-			mActivity.finish();
 
 		} else {
 			// Couldn't download it, so show an error
@@ -69,8 +69,9 @@ public class BookDownloader extends AsyncTask<Void, Long, Boolean> implements
 					books.addAll(getBooks(entry.path));
 				} else {
 					if (entry.fileName().endsWith(_EPUB)) {
-						Log.d("NEW_EPUB", entry.fileName());
-						books.add(new Ebook(entry));
+						Book entryBook = dbHandler.downloadBook(entry.path,
+								entry.fileName());
+						books.add(new Ebook(entry, entryBook));
 					}
 				}
 			}
