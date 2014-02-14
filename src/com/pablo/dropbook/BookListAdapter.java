@@ -48,7 +48,6 @@ public class BookListAdapter extends BaseAdapter {
 		if (book == null) {
 			tempView.titleViewHolder.setText("Error en libro");
 		} else {
-			Log.d("EBOOK", "Book title: " + book.getBookTitle());
 			tempView.titleViewHolder.setText(book.getBookTitle());
 		}
 		return view;

@@ -1,9 +1,12 @@
 package com.pablo.dropbook;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.pablo.dropbook.utilities.DropBoxController;
 
 public class MainActivity extends Activity implements AppData {
 
@@ -18,7 +21,8 @@ public class MainActivity extends Activity implements AppData {
 		setContentView(R.layout.main_view);
 
 		// Initialize DropBox services
-		dbHandler = DropBoxController.getInstance(getBaseContext());
+		DropBoxController.setupController(getApplicationContext());
+		dbHandler = DropBoxController.getInstance();
 
 		authBtn = (Button) findViewById(R.id.accessBtn);
 		listBtn = (Button) findViewById(R.id.goListBtn);
@@ -43,7 +47,7 @@ public class MainActivity extends Activity implements AppData {
 	}
 
 	public void goList(View view) {
-		new BookDownloader(MainActivity.this).execute();
+		Intent listIntent = new Intent(getBaseContext(), ListActivity.class);
+		startActivity(listIntent);
 	}
-
 }

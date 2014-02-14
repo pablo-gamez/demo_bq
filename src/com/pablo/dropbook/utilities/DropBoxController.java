@@ -1,4 +1,4 @@
-package com.pablo.dropbook;
+package com.pablo.dropbook.utilities;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,6 +22,7 @@ import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.android.AuthActivity;
 import com.dropbox.client2.exception.DropboxException;
 import com.dropbox.client2.session.AppKeyPair;
+import com.pablo.dropbook.AppData;
 
 public class DropBoxController implements AppData {
 
@@ -39,7 +40,11 @@ public class DropBoxController implements AppData {
 
 	private Context mContext;
 
-	public static DropBoxController getInstance(Context context) {
+	public static DropBoxController getInstance() {
+		return mInstance;
+	}
+
+	public static DropBoxController setupController(Context context) {
 		if (mInstance == null) {
 			mInstance = new DropBoxController(context);
 		}
