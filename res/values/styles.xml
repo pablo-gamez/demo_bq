@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -15,6 +15,22 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="orderHeader">
+        <item name="android:background">@color/light_gray</item>
+        <item name="android:textColor">@color/blue_hard</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:paddingLeft">10dp</item>
+    </style>
+
+    <style name="orderButton" parent="orderHeader">
+        <item name="android:background">@android:color/white</item>
+        <item name="android:clickable">true</item>
+        <item name="android:onClick">reorder</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
 </resources>

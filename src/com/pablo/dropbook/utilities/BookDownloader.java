@@ -20,6 +20,7 @@ public class BookDownloader implements Runnable {
 
 		this.dbPath = dropboxPath;
 		this.fileName = fileName;
+		
 		this.listener = listener;
 	}
 

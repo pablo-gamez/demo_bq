@@ -7,5 +7,9 @@
     <string name="getting_books">Descargando libros</string>
     <string name="bookList">Lista de libros en Dropbox</string>
     <string name="emptyList">No hay libros electrónicos en tu cuenta de Dropbox</string>
-    
+    <string name="orderTitle">Ordenar por:</string>
+    <string name="orderArchivo">Nombre de archivo</string>
+    <string name="orderDate">Fecha de creación</string>
+    <string name="orderBookTitle">Título del libro</string>
+
 </resources>

@@ -1,0 +1,84 @@
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- The main content view -->
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/estanteria"
+        tools:context=".MainActivity" >
+
+        <ImageView
+            android:id="@+id/orderBtn"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:clickable="true"
+            android:onClick="openTab"
+            android:padding="10dp"
+            android:src="@drawable/ic_drawer" />
+
+        <TextView
+            android:id="@+id/listHeader"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:text="@string/bookList"
+            android:textColor="@color/blue_hard"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <GridView
+            android:id="@+id/listContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/listHeader"
+            android:gravity="center"
+            android:horizontalSpacing="5dp"
+            android:numColumns="3"
+            android:verticalSpacing="5dp" />
+    </RelativeLayout>
+
+    <!-- The navigation drawer -->
+
+    <LinearLayout
+        android:id="@+id/homeSettings"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/orderHeader"
+            style="@style/orderHeader"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/orderTitle" />
+
+        <TextView
+            android:id="@+id/orderArchivo"
+            style="@style/orderButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/orderArchivo" />
+
+        <TextView
+            android:id="@+id/orderDate"
+            style="@style/orderButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/orderDate" />
+
+        <TextView
+            android:id="@+id/orderBookTitle"
+            style="@style/orderButton"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="@string/orderBookTitle" />
+    </LinearLayout>
+
+</android.support.v4.widget.DrawerLayout>

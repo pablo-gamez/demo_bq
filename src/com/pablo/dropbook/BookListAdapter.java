@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 public class BookListAdapter extends BaseAdapter {
 
+	private Context mContext;
 	private ArrayList<Ebook> bookList;
 	private LayoutInflater inflater;
 
@@ -22,6 +24,7 @@ public class BookListAdapter extends BaseAdapter {
 	}
 
 	public BookListAdapter(Context context, ArrayList<Ebook> items) {
+		mContext = context;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		bookList = items;
@@ -51,9 +54,12 @@ public class BookListAdapter extends BaseAdapter {
 		Ebook book = getItem(position);
 		tempView.titleViewHolder.setText(book.getBookTitle());
 		Bitmap coverImage = book.getCoverImage();
-		if (coverImage != null) {
-			tempView.imgViewHolder.setImageBitmap(coverImage);
+		if (coverImage == null) {
+			coverImage = BitmapFactory.decodeResource(mContext.getResources(),
+					R.drawable.ebook_icon);
 		}
+		
+		tempView.imgViewHolder.setImageBitmap(coverImage);
 
 		return view;
 	}

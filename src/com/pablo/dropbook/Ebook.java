@@ -3,6 +3,7 @@ package com.pablo.dropbook;
 import java.io.IOException;
 
 import nl.siegmann.epublib.domain.Book;
+import nl.siegmann.epublib.domain.Date;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
@@ -23,6 +24,14 @@ public class Ebook {
 
 	public String getBookTitle() {
 		return mBook.getTitle();
+	}
+
+	public Date getModifiedTime() {
+		try {
+			return mBook.getMetadata().getDates().get(0);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	public Bitmap getCoverImage() {
