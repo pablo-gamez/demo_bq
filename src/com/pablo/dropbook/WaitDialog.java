@@ -18,8 +18,6 @@ public class WaitDialog extends Dialog {
 
 		txt = loaderText;
 		text = (TextView) findViewById(R.id.alert_text);
-		setCanceledOnTouchOutside(false);
-		setCancelable(false);
 	}
 
 	@Override

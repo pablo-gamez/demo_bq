@@ -7,8 +7,10 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 
 import com.dropbox.client2.DropboxAPI.Entry;
 import com.pablo.dropbook.utilities.BookDownloader;
@@ -17,7 +19,7 @@ import com.pablo.dropbook.utilities.DropBoxController;
 import com.pablo.dropbook.utilities.ThreadPoolQueuer;
 
 public class ListActivity extends Activity implements AppData,
-		OnBookDownloadedListener {
+		OnBookDownloadedListener, OnItemClickListener {
 
 	// Dropbox services
 	DropBoxController dbHandler;
@@ -26,7 +28,7 @@ public class ListActivity extends Activity implements AppData,
 	private ThreadPoolQueuer poolQueuer;
 
 	// Interface components
-	ListView list;
+	GridView list;
 	ArrayList<Ebook> eBooks = new ArrayList<Ebook>();
 	BookListAdapter adapter;
 	ArrayList<Entry> entrys = new ArrayList<Entry>();
@@ -43,13 +45,20 @@ public class ListActivity extends Activity implements AppData,
 		adapter = new BookListAdapter(getBaseContext(), eBooks);
 
 		// Get views reference
-		list = (ListView) findViewById(R.id.listContent);
-		list.setEmptyView((TextView) findViewById(R.id.emptyContent));
-
+		list = (GridView) findViewById(R.id.listContent);
+		list.setOnItemClickListener(this);
 		list.setAdapter(adapter);
 
 		// Start Async Download
 		new AsyncDownload().execute();
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		Ebook clickedBook = eBooks.get(position);
+		DetailDialog dlg = new DetailDialog(ListActivity.this, clickedBook);
+		dlg.show();
 	}
 
 	@Override

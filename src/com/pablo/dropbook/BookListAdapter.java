@@ -3,11 +3,12 @@ package com.pablo.dropbook;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.util.Log;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class BookListAdapter extends BaseAdapter {
@@ -17,6 +18,7 @@ public class BookListAdapter extends BaseAdapter {
 
 	private class ViewHolder {
 		public TextView titleViewHolder;
+		public ImageView imgViewHolder;
 	}
 
 	public BookListAdapter(Context context, ArrayList<Ebook> items) {
@@ -32,12 +34,14 @@ public class BookListAdapter extends BaseAdapter {
 		final ViewHolder tempView;
 
 		if (view == null) {
-			view = inflater.inflate(R.layout.list_item, parent, false);
+			view = inflater.inflate(R.layout.grid_item, parent, false);
 
 			tempView = new ViewHolder();
 
 			tempView.titleViewHolder = (TextView) view
 					.findViewById(R.id.itemTitle);
+			tempView.imgViewHolder = (ImageView) view
+					.findViewById(R.id.itemImg);
 
 			view.setTag(tempView);
 		} else {
@@ -45,11 +49,12 @@ public class BookListAdapter extends BaseAdapter {
 		}
 
 		Ebook book = getItem(position);
-		if (book == null) {
-			tempView.titleViewHolder.setText("Error en libro");
-		} else {
-			tempView.titleViewHolder.setText(book.getBookTitle());
+		tempView.titleViewHolder.setText(book.getBookTitle());
+		Bitmap coverImage = book.getCoverImage();
+		if (coverImage != null) {
+			tempView.imgViewHolder.setImageBitmap(coverImage);
 		}
+
 		return view;
 	}
 

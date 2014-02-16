@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="48dp" >
+    android:layout_height="match_parent" >
 
     <ImageView
         android:id="@+id/itemImg"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="match_parent"
+        android:layout_height="160dp"
+        android:scaleType="fitCenter"
+        android:layout_centerHorizontal="true"
         android:src="@drawable/ebook_icon" />
 
     <TextView
         android:id="@+id/itemTitle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_toRightOf="@id/itemImg"
+        android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:gravity="center_vertical"
+        android:gravity="center"
+        android:layout_below="@id/itemImg"
         android:maxLines="2"
         android:padding="5dp" />
 

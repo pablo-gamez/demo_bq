@@ -2,32 +2,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+        android:background="@drawable/estanteria"
     tools:context=".MainActivity" >
 
     <TextView
         android:id="@+id/listHeader"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@color/light_gray"
+        android:layout_height="36dp"
         android:gravity="center"
         android:text="@string/bookList"
+        android:textColor="@color/blue_hard"
         android:textSize="20sp"
         android:textStyle="bold" />
 
-    <ListView
+    <GridView
         android:id="@+id/listContent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/listHeader" />
-
-    <TextView
-        android:id="@+id/emptyContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/listHeader"
         android:gravity="center"
-        android:textSize="18sp"
-        android:padding="20dp"
-        android:text="@string/emptyList" />
+        android:horizontalSpacing="5dp"
+        android:numColumns="3"
+        android:verticalSpacing="5dp" />
 
 </RelativeLayout>
